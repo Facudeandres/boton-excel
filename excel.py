@@ -1,15 +1,30 @@
-import streamlit as st
 import pandas as pd
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-# Importa la función file_uploader
-from streamlit import file_uploader
+# Carga el archivo Excel en un DataFrame de Pandas
+df = pd.read_excel("nombre_del_archivo.xlsx")
 
-# Crea el botón y almacena el archivo seleccionado en una variable
-archivo = file_uploader("Selecciona un archivo de Excel:", type="xlsx")
+# Crea una aplicación de PyQt5
+app = QtWidgets.QApplication([])
 
-# Si se seleccionó un archivo, carga su contenido en un DataFrame de pandas
-if archivo is not None:
-    df = pd.read_excel(archivo)
-    
-    # Muestra el contenido del DataFrame en la aplicación
-    st.write(df)
+# Crea una tabla
+table = QtWidgets.QTableWidget()
+
+# Establece el número de filas y columnas en la tabla
+table.setRowCount(len(df))
+table.setColumnCount(len(df.columns))
+
+# Establece las etiquetas de las columnas en la tabla
+table.setHorizontalHeaderLabels(df.columns)
+
+# Agrega los datos del DataFrame a la tabla
+for i in range(len(df)):
+    for j in range(len(df.columns)):
+        item = QtWidgets.QTableWidgetItem(str(df.iloc[i, j]))
+        table.setItem(i, j, item)
+
+# Muestra la tabla
+table.show()
+
+# Ejecuta la aplicación de PyQt5
+app.exec_()
